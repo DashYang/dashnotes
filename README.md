@@ -7,6 +7,7 @@
 
 ## 详细清单 Done
 1. BlockChain区块链技术一览
+2. Effective Java读书笔记(偏向于编程规范和经验之谈)
 
 ## 后续加入的内容 TODO
 PBFT,RAFT,PAXOS
