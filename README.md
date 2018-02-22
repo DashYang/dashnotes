@@ -10,7 +10,13 @@
 2. Effective Java读书笔记(偏向于编程规范和经验之谈)
 3. Understanding the jvm(对于内存分配和线程调度机制挺有帮助)
 4. BRPC
-5. interview 
+5. 面试宝典
+6. 分布式系统介绍
 
 ## 后续加入的内容 TODO
-PBFT,RAFT,PAXOS
+美团架构
+kafka
+spring
+thrift
+hadoop
+hive
