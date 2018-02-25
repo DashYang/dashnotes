@@ -12,6 +12,9 @@
 ##原子指令
 类似Java内存模型中的原子操作，可能存在以及共享资源竞争以及编译优化等问题，因此尽量避免共享资源，还有采用内存隔离（memory fencing）还有内存对齐导致的false sharing
 
+###lock free和wait free
+原子操作的指令是lock free和wait free的，所谓lock free指的是无论何时总有一个线程在干活，wait free指的是每个线程都在干事，注意用了锁的的方式一定不是lock free更不会是wait free，因为存在获得锁的线程crash导致没有线程能够获得锁，最后全部都挂起。一般通过CAS（compare and swap/set）机制实现
+
 ##IO操作
 1. blocking IO：发起IO操作之后阻塞线程等待IO结束，同步模式
 2. non-blocking IO：发起IO操作之后不阻塞，同时等待多个IO操作同时结束，是一种批量的同步，比如epoll等
@@ -53,4 +56,8 @@ posix系统的timer触发本质是系统调用，rpc发起之前设定一个time
 ###多线程下的解决思路？
 1. 使用一个timethread
 2. 创建的timer散列到多个bucket以降低线程间的竞争
+
+
+
+
 
