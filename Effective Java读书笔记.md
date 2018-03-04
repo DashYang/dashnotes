@@ -1,4 +1,4 @@
-#Effective Java读书笔记
+va读书笔记
 @(读书笔记)[Java|使用方法]
 
 -------------------
@@ -10,89 +10,89 @@
 
 ```java
 public static Boolean valueof(boolean b) {
-	return b ? Boolean.TRUE : Boolean.FALSE;
+        return b ? Boolean.TRUE : Boolean.FALSE;
 }
 ```
 
 ####优点
 1. 静态工厂方法有名称(valueof):构造函数名字一样,不便与区分不同的参数列表的构造函数
-2.  不必在每次调用的时候创建一个新的对象,上面的方法其实就是在返回现有的对象
-3. 可以返回原类型的任意子对象
-4. 代码变得更加简洁
+                               2.  不必在每次调用的时候创建一个新的对象,上面的方法其实就是在返回现有的对象
+                                       3. 可以返回原类型的任意子对象
+                                        4. 代码变得更加简洁
 
 ####缺点
-1. 不含有公有的或者受保护的构造器,就不能被子类化
-2.  与其他静态方法没有区别,在API文档中难以查明
+                                        1. 不含有公有的或者受保护的构造器,就不能被子类化
+                                        2.  与其他静态方法没有区别,在API文档中难以查明
 
-相关的应用框架:**基于接口的框架Java Collection Framework**,**服务提供者框架(JDBC)**
+                                        相关的应用框架:**基于接口的框架Java Collection Framework**,**服务提供者框架(JDBC)**
 
 ###遇到多个构造器参数时要考虑用构建器
 
-当参数众多并且数目不确定的情况下,使用尽可能多的构造去去覆盖所有情况是不明智的,可以采取JavaBean模式,所谓JavaBean模式即采用无参构造器,调用setter方法来设置每个必要的参数.但是由于创建过程被分配到了几个setter中,类无法通过**检验构造器参数的有效性来保证一致性**.而且JavaBean模式阻止了把类做成不可变的可能.最好是采用**Builder模式**
+                                        当参数众多并且数目不确定的情况下,使用尽可能多的构造去去覆盖所有情况是不明智的,可以采取JavaBean模式,所谓JavaBean模式即采用无参构造器,调用setter方法来设置每个必要的参数.但是由于创建过程被分配到了几个setter中,类无法通过**检验构造器参数的有效性来保证一致性**.而且JavaBean模式阻止了把类做成不可变的可能.最好是采用**Builder模式**
 
-```java
-public class NutritionFacts {
-	private final int servingSize;
-	private final int servings;
-	private final int calories;
-	private final int fat;
-	private final int sodium;
-	private final int carbohydrate;
+                                        ```java
+                                        public class NutritionFacts {
+                                                private final int servingSize;
+                                                    private final int servings;
+                                                        private final int calories;
+                                                            private final int fat;
+                                                                private final int sodium;
+                                                                    private final int carbohydrate;
 
-	public static class Builder {
-		// Required parameters
-		private final int servingSize;
-		private final int servings;
+                                                                        public static class Builder {
+                                                                                    // Required parameters
+                                                                                    private final int servingSize;
+                                                                                            private final int servings;
 
-		// Optional parameters - initialized to default values
-		private int calories = 0;
-		private int fat = 0;
-		private int carbohydrate = 0;
-		private int sodium = 0;
+                                                                                                    // Optional parameters - initialized to default values
+                                                                                                    private int calories = 0;
+                                                                                                            private int fat = 0;
+                                                                                                                    private int carbohydrate = 0;
+                                                                                                                            private int sodium = 0;
 
-		public Builder(int servingSize, int servings) {
-			this.servingSize = servingSize;
-			this.servings = servings;
-		}
+                                                                                                                                    public Builder(int servingSize, int servings) {
+                                                                                                                                                    this.servingSize = servingSize;
+                                                                                                                                                                this.servings = servings;
+                                                                                                                                                                        }
 
-		public Builder calories(int val) {
-			calories = val;
-			return this;
-		}
+                                                                                                                                            public Builder calories(int val) {
+                                                                                                                                                            calories = val;
+                                                                                                                                                                        return this;
+                                                                                                                                                                                }
 
-		public Builder fat(int val) {
-			fat = val;
-			return this;
-		}
+                                                                                                                                                    public Builder fat(int val) {
+                                                                                                                                                                    fat = val;
+                                                                                                                                                                                return this;
+                                                                                                                                                                                        }
 
-		public Builder carbohydrate(int val) {
-			carbohydrate = val;
-			return this;
-		}
+                                                                                                                                                            public Builder carbohydrate(int val) {
+                                                                                                                                                                            carbohydrate = val;
+                                                                                                                                                                                        return this;
+                                                                                                                                                                                                }
 
-		public Builder sodium(int val) {
-			sodium = val;
-			return this;
-		}
+                                                                                                                                                                    public Builder sodium(int val) {
+                                                                                                                                                                                    sodium = val;
+                                                                                                                                                                                                return this;
+                                                                                                                                                                                                        }
 
-		public NutritionFacts build() {
-			return new NutritionFacts(this);
-		}
-	}
+                                                                                                                                                                            public NutritionFacts build() {
+                                                                                                                                                                                            return new NutritionFacts(this);
+                                                                                                                                                                                                    }
+                                                                                                                                                                                }
 
-	private NutritionFacts(Builder builder) {
-		servingSize = builder.servingSize;
-		servings = builder.servings;
-		calories = builder.calories;
-		fat = builder.fat;
-		sodium = builder.sodium;
-		carbohydrate = builder.carbohydrate;
-	}
+                                                                            private NutritionFacts(Builder builder) {
+                                                                                        servingSize = builder.servingSize;
+                                                                                                servings = builder.servings;
+                                                                                                        calories = builder.calories;
+                                                                                                                fat = builder.fat;
+                                                                                                                        sodium = builder.sodium;
+                                                                                                                                carbohydrate = builder.carbohydrate;
+                                                                                                                                    }
 
-	public static void main(String[] args) {
-		NutritionFacts cocaCola = new NutritionFacts.Builder(240, 8).calories(100).sodium(35).carbohydrate(27).build();
-	}
-}
+                                                                                public static void main(String[] args) {
+                                                                                            NutritionFacts cocaCola = new NutritionFacts.Builder(240, 8).calories(100).sodium(35).carbohydrate(27).build();
+                                                                                                }
+                                        }
 ```
 **Builder模式**的优点:
 1. 可以对参数强加约束条件
@@ -297,6 +297,7 @@ clone与final是不兼容的，clone最好把class中的逐项拷贝，如果是
 2. 保护性的编写readObject方法
 3. 如果singleton实现了serializable,那么他就不再是singleton,因为每次readObject都是新的,所以要readresolve,返回一个唯一引用
 4. 考虑序列化代理代替序列化实例,在需要序列化的类中添加一个私有的静态嵌套类
+
 
 
 
