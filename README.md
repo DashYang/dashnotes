@@ -14,9 +14,5 @@
 6. 分布式系统介绍
 
 ## 后续加入的内容 TODO
-美团架构
-kafka
-spring
-thrift
 hadoop
 hive
