@@ -1,4 +1,4 @@
-va读书笔记
+#Effective Java读书笔记
 @(读书笔记)[Java|使用方法]
 
 -------------------
@@ -10,89 +10,89 @@ va读书笔记
 
 ```java
 public static Boolean valueof(boolean b) {
-        return b ? Boolean.TRUE : Boolean.FALSE;
+	return b ? Boolean.TRUE : Boolean.FALSE;
 }
 ```
 
 ####优点
 1. 静态工厂方法有名称(valueof):构造函数名字一样,不便与区分不同的参数列表的构造函数
-                               2.  不必在每次调用的时候创建一个新的对象,上面的方法其实就是在返回现有的对象
-                                       3. 可以返回原类型的任意子对象
-                                        4. 代码变得更加简洁
+2.  不必在每次调用的时候创建一个新的对象,上面的方法其实就是在返回现有的对象
+3. 可以返回原类型的任意子对象
+4. 代码变得更加简洁
 
 ####缺点
-                                        1. 不含有公有的或者受保护的构造器,就不能被子类化
-                                        2.  与其他静态方法没有区别,在API文档中难以查明
+1. 不含有公有的或者受保护的构造器,就不能被子类化
+2.  与其他静态方法没有区别,在API文档中难以查明
 
-                                        相关的应用框架:**基于接口的框架Java Collection Framework**,**服务提供者框架(JDBC)**
+相关的应用框架:**基于接口的框架Java Collection Framework**,**服务提供者框架(JDBC)**
 
 ###遇到多个构造器参数时要考虑用构建器
 
-                                        当参数众多并且数目不确定的情况下,使用尽可能多的构造去去覆盖所有情况是不明智的,可以采取JavaBean模式,所谓JavaBean模式即采用无参构造器,调用setter方法来设置每个必要的参数.但是由于创建过程被分配到了几个setter中,类无法通过**检验构造器参数的有效性来保证一致性**.而且JavaBean模式阻止了把类做成不可变的可能.最好是采用**Builder模式**
+当参数众多并且数目不确定的情况下,使用尽可能多的构造去去覆盖所有情况是不明智的,可以采取JavaBean模式,所谓JavaBean模式即采用无参构造器,调用setter方法来设置每个必要的参数.但是由于创建过程被分配到了几个setter中,类无法通过**检验构造器参数的有效性来保证一致性**.而且JavaBean模式阻止了把类做成不可变的可能.最好是采用**Builder模式**
 
-                                        ```java
-                                        public class NutritionFacts {
-                                                private final int servingSize;
-                                                    private final int servings;
-                                                        private final int calories;
-                                                            private final int fat;
-                                                                private final int sodium;
-                                                                    private final int carbohydrate;
+```java
+public class NutritionFacts {
+	private final int servingSize;
+	private final int servings;
+	private final int calories;
+	private final int fat;
+	private final int sodium;
+	private final int carbohydrate;
 
-                                                                        public static class Builder {
-                                                                                    // Required parameters
-                                                                                    private final int servingSize;
-                                                                                            private final int servings;
+	public static class Builder {
+		// Required parameters
+		private final int servingSize;
+		private final int servings;
 
-                                                                                                    // Optional parameters - initialized to default values
-                                                                                                    private int calories = 0;
-                                                                                                            private int fat = 0;
-                                                                                                                    private int carbohydrate = 0;
-                                                                                                                            private int sodium = 0;
+		// Optional parameters - initialized to default values
+		private int calories = 0;
+		private int fat = 0;
+		private int carbohydrate = 0;
+		private int sodium = 0;
 
-                                                                                                                                    public Builder(int servingSize, int servings) {
-                                                                                                                                                    this.servingSize = servingSize;
-                                                                                                                                                                this.servings = servings;
-                                                                                                                                                                        }
+		public Builder(int servingSize, int servings) {
+			this.servingSize = servingSize;
+			this.servings = servings;
+		}
 
-                                                                                                                                            public Builder calories(int val) {
-                                                                                                                                                            calories = val;
-                                                                                                                                                                        return this;
-                                                                                                                                                                                }
+		public Builder calories(int val) {
+			calories = val;
+			return this;
+		}
 
-                                                                                                                                                    public Builder fat(int val) {
-                                                                                                                                                                    fat = val;
-                                                                                                                                                                                return this;
-                                                                                                                                                                                        }
+		public Builder fat(int val) {
+			fat = val;
+			return this;
+		}
 
-                                                                                                                                                            public Builder carbohydrate(int val) {
-                                                                                                                                                                            carbohydrate = val;
-                                                                                                                                                                                        return this;
-                                                                                                                                                                                                }
+		public Builder carbohydrate(int val) {
+			carbohydrate = val;
+			return this;
+		}
 
-                                                                                                                                                                    public Builder sodium(int val) {
-                                                                                                                                                                                    sodium = val;
-                                                                                                                                                                                                return this;
-                                                                                                                                                                                                        }
+		public Builder sodium(int val) {
+			sodium = val;
+			return this;
+		}
 
-                                                                                                                                                                            public NutritionFacts build() {
-                                                                                                                                                                                            return new NutritionFacts(this);
-                                                                                                                                                                                                    }
-                                                                                                                                                                                }
+		public NutritionFacts build() {
+			return new NutritionFacts(this);
+		}
+	}
 
-                                                                            private NutritionFacts(Builder builder) {
-                                                                                        servingSize = builder.servingSize;
-                                                                                                servings = builder.servings;
-                                                                                                        calories = builder.calories;
-                                                                                                                fat = builder.fat;
-                                                                                                                        sodium = builder.sodium;
-                                                                                                                                carbohydrate = builder.carbohydrate;
-                                                                                                                                    }
+	private NutritionFacts(Builder builder) {
+		servingSize = builder.servingSize;
+		servings = builder.servings;
+		calories = builder.calories;
+		fat = builder.fat;
+		sodium = builder.sodium;
+		carbohydrate = builder.carbohydrate;
+	}
 
-                                                                                public static void main(String[] args) {
-                                                                                            NutritionFacts cocaCola = new NutritionFacts.Builder(240, 8).calories(100).sodium(35).carbohydrate(27).build();
-                                                                                                }
-                                        }
+	public static void main(String[] args) {
+		NutritionFacts cocaCola = new NutritionFacts.Builder(240, 8).calories(100).sodium(35).carbohydrate(27).build();
+	}
+}
 ```
 **Builder模式**的优点:
 1. 可以对参数强加约束条件
@@ -109,8 +109,31 @@ Tips:如果以后会添加参数的类最好一开始就采用Builder模式,不�
 ###用私有构造器或者枚举类型强化Singleton
 Singleton通常表示那些本质上唯一的类,这种通常会使得调试变得异常艰难.以前两种方式来创建,这两种方法都是采用私有的构造器
 1. 公有静态成员是个final域（变量申明）： 享有特权的客户端可以通过反射机制的AccessibleObject.setAccessible的方法来调用私有构造类，不过可以通过修改构造器使得调用第二次的时候抛出异常
-2. 公有成员是个静态工厂方法（函数生命）：静态调用内联话，static确保唯一，灵活。如果改为可序列化对象，单纯implements Serializable是不够的，比如声明所有实例都是瞬时的
+2. 公有成员是个静态工厂方法（函数生命）：静态调用内联化，static确保唯一，灵活。如果改为可序列化对象，单纯implements Serializable是不够的，比如声明所有实例都是瞬时的
 3. 包含一个单个元素的枚举类型：枚举其实就是一个类，枚举的成员就是类的静态成员。本身对于序列化和反序列化的支持就比较好。枚举类型绝对防止多次实例化，即使反射攻击和复杂的序列化也没有问题
+
+```java
+//使用枚举的单例模式
+public class EnumSingleton{
+    private EnumSingleton(){}
+    public static EnumSingleton getInstance(){
+        return Singleton.INSTANCE.getInstance();
+    }
+    
+    private static enum Singleton{
+        INSTANCE;
+        
+        private EnumSingleton singleton;
+        //JVM会保证此方法绝对只调用一次
+        private Singleton(){
+            singleton = new EnumSingleton();
+        }
+        public EnumSingleton getInstance(){
+            return singleton;
+        }
+    }
+}
+```
 
 ###通过私有的构造器强化不可实例化的能力
 通常来说工具类不希望被实例化，因此构造器其实是不必要的，但是在不显示指定构造器的情况下会生成缺省的无参构造器，因此我们只要让这个类包含私有构造器，他就不能被实例化了。但是缺点是无法被子类化，因为子类必须调用构造器，但父类的构造器是私有的。
@@ -201,7 +224,7 @@ clone与final是不兼容的，clone最好把class中的逐项拷贝，如果是
 
 有几个原则如下
 1. 尽可能的使每个类或者成员不被外界访问，给予尽可能小的访问权限，如果这个类实现了serializable接口，就有可能泄露，覆盖超类的方法必须要访问权限不低于超类（比如超类为public，子类不能为private，不然无法访问，会编译出错），接口中的方法必须为公有的
-2.  实例域决不能是公有的？
+2.  实例域(非final)决不能是公有的
 
 ###公有类中使用访问方法而非公有域
 
@@ -229,7 +252,7 @@ clone与final是不兼容的，clone最好把class中的逐项拷贝，如果是
 
 ###接口优于抽象类
 
-1. 现有的类很容易被更新从而实现新的接口，类的继承要负责很多，可能会牵扯到很多部相关的继承链中的类
+1. 现有的类很容易被更新从而实现新的接口，类的继承要复杂很多，可能会牵扯到很多部相关的继承链中的类
 2. 接口是定义混合类型的理想选择，类可以实现多个借口
 3. 接口允许构造非层次结构的类型框架
 
@@ -241,7 +264,7 @@ clone与final是不兼容的，clone最好把class中的逐项拷贝，如果是
 
 ###类层次优于标签类
 
-如果一个类有多种标签，最好把共性提取出来作为超类，不同的子类以各自的方式实现他（感觉没人脑残会这么写代码）
+如果一个类有多种标签，最好把共性提取出来作为超类，不同的子类以各自的方式实现他。（标签类指一个类中有多套比较独立的对象和函数）
 
 ###用函数表示策略
 首先声明一个接口表示策略，并为该策略声明一个实现该接口的类，如果只用一次，可以通过匿名类来实例化，如果要被重复使用则应当声明为私有的静态成员类，通过公有的静态final域导出
@@ -277,7 +300,7 @@ clone与final是不兼容的，clone最好把class中的逐项拷贝，如果是
 
 6. 尽量使用基本类型替代装箱类型（装箱拆箱有问题）
 7. 避免使用字符串
-8. 当心字符串的连接（+）性能，Stringbuilder代替String
+8. 当心字符串的连接（+）性能，Stringbuilder代替String +会创建新的Stringbuilder
 9. 接口优于类和反射机制
 
 ###并发编程的哲学（注意事项）
@@ -297,7 +320,6 @@ clone与final是不兼容的，clone最好把class中的逐项拷贝，如果是
 2. 保护性的编写readObject方法
 3. 如果singleton实现了serializable,那么他就不再是singleton,因为每次readObject都是新的,所以要readresolve,返回一个唯一引用
 4. 考虑序列化代理代替序列化实例,在需要序列化的类中添加一个私有的静态嵌套类
-
 
 
 

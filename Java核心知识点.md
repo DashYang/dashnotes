@@ -12,12 +12,14 @@
 7. 锁机制(ReentrantLock, ReadWriteLock)
 8. fork&join大任务分解最后合并
 9. threadlocal
+10. NIO和AIO
 
 ##volatile
 volatile变量每次读取之间会刷新自己,从主内存中读取.因此他在读取的那时应该是没有问题的,但是后面的一致性就无法保证了.(load,use),(assign,stor)连续出现,其他的没有这种硬性要求
 volatile禁止指令重排优化,为了更快的实现读写内存而将指令不按照顺序执行,在多线程环境下可能会导致问题,线程之间
 不适用修改基于上一次的（i++），适用于设置不依赖上一次结果的状态
 拥有可见性
+可见性:当一个线程修改了共享变量的值,其他的能够立即得知
 
 ##原子变量AtomicInteger
 通过cas实现
@@ -105,7 +107,13 @@ ReentrantReadWriteLock 有读锁和写锁，读锁之间共享，写锁之间互
 
 #threadlocal
 
-线程独有的变量，一般用来存放线程独立的资源，比如spring中一些线程独有的bean从而实现数据隔离
+线程独有的变量，一般用来存放线程独立的资源，比如spring中一些线程独有的bean从而实现数据格力
+
+
+##NIO和AIO
+NIO主要由三部分组成，buffer（固定数量的数据的容器）、channel（访问操作系统本身的IO服务，有点像FD）和selector（select，epoll之类的），核心原理有点像select。是一种非阻塞的IO处理机制，但本质上还是单线程（线程多路复用技术）
+AIO，使用回调函数进行业务处理，适合业务比较重的操作
+
 
 
 

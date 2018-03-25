@@ -7,20 +7,22 @@
 1. 单线程reactor(epoll)
 2. N：1线程库，一个用户态线程映射到一个系统线程，比如fiber（应该跟协程差不多）
 2. 多线程reactor：有一个事件分配器将任务分给不同的线程，可能同时唤醒多个线程导致**惊群效应**
-3. M:N线程库，M个用户线程（性能好，调度复杂）映射到N的系统线程中（性能差，调度简单）bthread，不是协程，由于协程，由于work stealling机制，一个bthread可以偷到其他系统线程
+3. M:N线程库，M个用户线程（性能好，调度复杂）映射到N的系统线程中（性能差，调度简单）bthread，不是协程，因为有work stealling机制，一个bthread可以偷到其他系统线程去执行
 
 ##原子指令
-类似Java内存模型中的原子操作，可能存在以及共享资源竞争以及编译优化等问题，因此尽量避免共享资源，还有采用内存隔离（memory fencing）还有内存对齐导致的false sharing
+类似Java内存模型中的原子操作，可能存在以及共享资源竞争以及编译优化等问题，因此尽量避免共享资源，还有采用内存隔离（memory fencing）还有**内存对齐**(本身不是共享资源，但是跟共享资源在同一个cacheline)导致的false sharing
 
 ###lock free和wait free
 原子操作的指令是lock free和wait free的，所谓lock free指的是无论何时总有一个线程在干活，wait free指的是每个线程都在干事，注意用了锁的的方式一定不是lock free更不会是wait free，因为存在获得锁的线程crash导致没有线程能够获得锁，最后全部都挂起。一般通过CAS（compare and swap/set）机制实现
 
 ##IO操作
 1. blocking IO：发起IO操作之后阻塞线程等待IO结束，同步模式
-2. non-blocking IO：发起IO操作之后不阻塞，同时等待多个IO操作同时结束，是一种批量的同步，比如epoll等
+2. non-blocking IO：发起IO操作之后不阻塞，同时等待多个IO操作同时结束，是一种批量的同步，比如epoll（红黑树实现）等
 3. 异步IO：用户传递一个回调等到IO结束后调用
 
 当并发不高的情况下blocking还可以（无调度的优势），过高就要non-blocking
+
+提到的一种wait-free的Multi-producer single consumer的方法：尝试交换出链表头的，返回值为空则获得了写权利，没有的会把自己的任务通过链表放到任务列表的后面，从而正在写的线程看到后可以继续写。
 
 ##DoubleBufferedData
 
@@ -64,8 +66,6 @@ QPS和延迟通过循环队列统计，给定一个大小为128的区间去统�
 posix系统的timer触发本质是系统调用，rpc发起之前设定一个timer，返回之后删除timer，因此大部分情况下timer只用一次
 
 *libevent中通过小顶堆记录超时时间，如果中间没有其他事件阻止，弹出超时元素，调用相应回调函数，如此周而复始。所有timer相关的操作在一个线程完成，只要回调不阻塞就没问题，但是这不是多线程下的场景，多线程取对同一个time thread中的小顶堆操作会带来竞争和cache bouncing，而且这种timer还很有可能不会被触发
-
-
 
 ###多线程下的解决思路？
 1. 使用一个timethread，所有的操作交给他来做

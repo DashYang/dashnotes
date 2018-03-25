@@ -129,6 +129,12 @@ $$Target Zero = GetZeroHeader(hash(PrevHash+NONCE))$$
 ###EVM
 有一个特点是这个除了区块链之外还有自己的虚拟机**EVM**来运行特殊账户拥有一的段特殊的可执行代码( LLL, Serpent and Mutan),从而控制账户的行为,这个叫做contract(合约).为了避免合约中的运算被滥用,后来加入了Gas机制,每次运行合约需要"Gas fee" 油费
 
+##Hyperledger
+
+其实就是一个分布式系统，跟区块链开放的思想相差甚远，后期甚至也放弃了PBFT，成为了单纯的消息队列来维持一致性
+
+##Algorand
+
 
 
 
